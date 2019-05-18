@@ -1,0 +1,5 @@
+batch_size = 1 everywhere:
+- remove useless dimensions to tensors
+- remove batch_size parameter
+- remove top_k
+

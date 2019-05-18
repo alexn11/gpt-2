@@ -22,7 +22,7 @@ def top_k_logits(logits, k):
     )
 
 
-def sample_sequence(*, hparams, length, start_token=None, batch_size=None, context=None, temperature=1, top_k=0):
+def sample_sequence(*, hparams, length, address, start_token=None, batch_size=None, context=None, temperature=1, top_k=0):
     if start_token is None:
         assert context is not None, 'Specify exactly one of start_token and context!'
     else:
@@ -46,32 +46,43 @@ def sample_sequence(*, hparams, length, start_token=None, batch_size=None, conte
         # rather than leaving the last token transformer calculation to the while loop.
         context_output = step(hparams, context[:, :-1])
 
-        def body(past, prev, output):
+        def body(past, prev, output, addr):
             next_outputs = step(hparams, prev[:, tf.newaxis], past=past)
-            logits = next_outputs['logits'][:, -1, :]  / tf.to_float(temperature)
-            logits = top_k_logits(logits, k=top_k)
-            samples = tf.multinomial(logits, num_samples=1, output_dtype=tf.int32)
+            logits = next_outputs['logits'][:, -1, :] # / tf . cast (temperature, dtype = tf . float32)
+            print (logits)
+            # NOTE: here im using that batch_size=1:
+            samples = tf . gather_nd (tf . argsort (logits [0, :], direction = "DESCENDING"), [ [ addr [ 0, 0 ] ], ])
+            #logits = top_k_logits(logits, k=top_k)
+            #samples = tf.multinomial(logits, num_samples=1, output_dtype=tf.int32)
+            # below is useless if batch_size = 1 everywhere
+            samples = samples [ : , tf . newaxis ]
+            #print (" from gatherd=" + str(samples))
+            samples . set_shape ((batch_size, 1))
+            #print (samples)
             return [
                 tf.concat([past, next_outputs['presents']], axis=-2),
                 tf.squeeze(samples, axis=[1]),
                 tf.concat([output, samples], axis=1),
+                addr [ :, 1 : ],
             ]
 
         def cond(*args):
             return True
 
-        _, _, tokens = tf.while_loop(
+        _, _, tokens, _ = tf.while_loop(
             cond=cond, body=body,
             maximum_iterations=length,
             loop_vars=[
                 context_output['presents'],
                 context[:, -1],
                 context,
+                address,
             ],
             shape_invariants=[
                 tf.TensorShape(model.past_shape(hparams=hparams, batch_size=batch_size)),
                 tf.TensorShape([batch_size]),
                 tf.TensorShape([batch_size, None]),
+                tf . TensorShape ([batch_size, None]),
             ],
             back_prop=False,
         )
