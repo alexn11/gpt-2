@@ -21,7 +21,6 @@ def read_and_make_address (length, address_text):
 def interact_model(
     model_name='117M',
     seed=None,
-    nsamples=1,
     length=None,
     temperature=1,
     mode="random",
@@ -33,7 +32,6 @@ def interact_model(
     :model_name=117M : String, which model to use
     :seed=None : Integer seed for random number generators, fix seed to reproduce
      results
-    :nsamples=1 : Number of samples to return total
     :length=None : Number of tokens in generated text, if None (default), is
      determined by model hyperparameters
     :temperature=1 : Float value controlling randomness in boltzmann
