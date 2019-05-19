@@ -3,3 +3,10 @@ batch_size = 1 everywhere:
 - remove batch_size parameter
 - remove top_k
 
+
+
+python src/interactive_conditional_samples.py 117M 0 1 25 1 random "this is enough!"
+
+
+python src/interactive_conditional_samples.py 117M 0 1 25 1 input "this is enough!"
+7 5 3 2 4 6 52 10 2 3 12 3 35 2 20 22 21 3
