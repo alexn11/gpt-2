@@ -1,0 +1,23 @@
+ <!DOCTYPE html>
+<html>
+<script>
+function generate_address () {
+ return "0 ".repeat(512)
+}
+</script>
+
+<body onload="document.forms['query-form']['address'].value=generate_address()">
+
+<form name="query-form" action="cgi-bin/query.py" method="post">
+Key: <input type="text" name="key" value="The Library Of Babel">
+<br>
+Address:
+<input type="text" name="address" value="">
+<br>
+Generate random address <input type="checkbox" name="random" onchange="this.parentElement['address'].disabled=this.checked">
+<br>
+<input type="submit" value="Query">
+</form>
+
+</body>
+</html> 
