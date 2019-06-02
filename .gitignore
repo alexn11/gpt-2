@@ -1,9 +1,4 @@
-__pycache__
-.mypy_cache/
-models/
-other/
-demo-server.py
-djsite
+gitignored/
 http/cgi-bin/__pycache__
 http/cgi-bin/models
 

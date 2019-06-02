@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+"""
+MIT License
+
+Copyright (c) 2019 Alexandre De Zotti (modifications)
+Copyright (c) 2019 OpenAI
+"""
+
+
 import json
 import os
 import sys
@@ -8,14 +16,46 @@ import tensorflow as tf
 
 import model, sample, encoder
 
+def convert_letter_to_binary (letter):
+  letter_value = ord (letter)
+  if ((letter >= 'a') and (letter <= 'z')):
+    value = letter_value - ord ('a')
+  elif ((letter >= 'A') and (letter <= 'Z')):
+    value = letter_value - ord ('A') + 26
+  elif ((letter >= '0') and (letter <= '9')):
+    value = letter_value - ord ('0') + 52
+  elif (letter == '-'):
+    value = 62
+  elif (letter == '+'):
+    value = 63
+  return bin (value) [ 2 : ] [ : : -1 ]
+
+def convert_address_text_to_numbers (length, address_text):
+  # each address index is a 16 bits unisgned integer
+  # the address is separated in size-6 subrows
+  subrows_per_row = length // 6 + (0 if ((length % 6) == 0) else 1)
+  address_indexes = np . zeros ([length, ], dtype = "int32")
+  row = 0
+  subrow = 0
+  for letter in address_text:
+     binary_string = convert_letter_to_binary (letter)
+     bit_index = 0
+     for digit in binary_string:
+       try:
+         address_indexes [ 6 * subrow + bit_index ] += ((int (digit)) << row)
+       except (IndexError): # some of the data will just be ignored because length is not necessarily divisible by 6
+         break
+       bit_index += 1
+     subrow += 1
+     if (subrow == subrows_per_row):
+       row += 1
+       subrow = 0
+  return address_indexes
+
+
 def read_and_make_address (length, address_text):
-  address = np . zeros ([length, ], dtype = "int32")
-  address_tokens = address_text . split ()
-  token_index = 0
-  for token in address_tokens:
-    address [token_index] = int (token)
-    token_index += 1
-  return address
+  return convert_address_text_to_numbers (length, address_text)
+
 
 
 def generate_sample (
@@ -63,6 +103,7 @@ def generate_sample (
         raise ValueError("Can't get samples longer than window size: %s" % hparams.n_ctx)
 
     with tf.Session(graph=tf.Graph()) as sess:
+
         context = tf . placeholder (tf . int32, [None, ])
         address = tf . placeholder (tf . int32, [length, ])
 
@@ -100,20 +141,32 @@ def generate_sample (
         print (text)
 
 
+def main ():
+  model_name = sys . argv [1]
+  models_dir = sys . argv [2]
+  try:
+    seed = float (sys . argv [3])
+  except (ValueError):
+    seed = None
+  mode = sys . argv [4]
+  key = sys . argv [5]
+  address_text = None
+  if (mode == "input"):
+    address_text = sys . argv [6]
 
-model_name = sys . argv [1]
-try:
-  seed = float (sys . argv [2])
-except (ValueError):
-  seed = None
-mode = sys . argv [3]
-key = sys . argv [4]
-address_text = None
-if (mode == "input"):
-  address_text = sys . argv [5]
+  generate_sample (model_name = model_name, seed = seed, mode = mode, key = key, address_text = address_text, models_dir = models_dir)
 
-models_dir = "cgi-bin/models"
 
-generate_sample (model_name = model_name, seed = seed, mode = mode, key = key, address_text = address_text, models_dir = models_dir)
+
+
+if (__name__ == "__main__"):
+  if (sys . argv [1] == "--help"):
+    print ("Examples:")
+    print ("  $ python3 samplegen.py 117M models None random 'Alpha and Omega'")
+    print ("  $ python3 samplegen.py 117M models None input 'Alpha and Omega' abs-+c05d9dfqgEEZ")
+    sys . exit (0)
+  main ()
+
+
 
 

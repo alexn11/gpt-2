@@ -1,23 +1,48 @@
  <!DOCTYPE html>
 <html>
+
+<style>
+.padded-box {
+ box-sizing: content-box;
+ padding: 30px; 
+}
+.tightly-padded-box {
+ box-sizing: content-box;
+ padding: 10px; 
+}
+</style>
+
 <script>
 function generate_address () {
- return "0 ".repeat(512)
+ return "a"
 }
 </script>
 
 <body onload="document.forms['query-form']['address'].value=generate_address()">
 
+<div class="padded-box">
 <form name="query-form" action="cgi-bin/query.py" method="post">
+<div class="tightly-padded-box">
 Key: <input type="text" name="key" value="The Library Of Babel">
-<br>
-Address:
-<input type="text" name="address" value="">
-<br>
+</div>
+<div class="tightly-padded-box" style="width:600px;">
+Address :</div>
+<div class="tightly-padded-box">
+<textarea name="address" rows="16" cols="86">
+</textarea>
+</div>
+<div class="tightly-padded-box">
 Generate random address <input type="checkbox" name="random" onchange="this.parentElement['address'].disabled=this.checked">
-<br>
+</div>
+<div class="tightly-padded-box">
 <input type="submit" value="Query">
+</div>
 </form>
+</div>
+
+<div class="padded-box">
+<b>Note:</b> for the address the allowed characters are: lower and upper case letters, digits and the characters + and -.
+</div>
 
 </body>
 </html> 
