@@ -1,6 +1,9 @@
  <!DOCTYPE html>
 <html>
 
+ <head>
+
+<meta charset="utf-8"/>
 <style>
 .padded-box {
  box-sizing: content-box;
@@ -12,37 +15,56 @@
 }
 </style>
 
+
 <script>
-function generate_address () {
- return "a"
+function generate_address () { return "a"; }
+function filter_address (address_text) {
+ address_text = address_text . replace (/[ _]/g, "-");
+ address_text = address_text . replace (/[.,'!?;:/]/g, "+");
+ address_text = address_text . replace (/[^a-zA-Z0-9+-]/g, "");
+ return address_text;
+}
+function prepare_submit () {
+  address_text_area = document . getElementById ("address-textarea");
+  if (document . getElementById ("generate-random-check") . checked) {
+    address_text_area . value = "(randomly generated)";
+  } else {
+    address_text_area . value = filter_address (address_text_area . value);
+  }
+  document . getElementById ("message") . innerHTML = "<h1>Fetching page...</h1>";
+  var form_elements = document . getElementById ("query-form") . elements;
+  for (var i = 0, len = form_elements . length; i < len; i ++) { form_elements [i] . readOnly = true; }
 }
 </script>
 
-<body onload="document.forms['query-form']['address'].value=generate_address()">
+<body onload="document.getElementById('address-textarea').value=generate_address()">
 
 <div class="padded-box">
-<form name="query-form" action="cgi-bin/query.py" method="post">
+
+<div id="message">
+</div>
+
+<div class="padded-box">
+<form name="query-form" action="cgi-bin/query.py" id="query-form" method="post" onsubmit="prepare_submit()">
 <div class="tightly-padded-box">
-Key: <input type="text" name="key" value="The Library Of Babel">
+Library name: <input type="text" name="key" value="The Library Of Babel">
 </div>
 <div class="tightly-padded-box" style="width:600px;">
-Address :</div>
+Page index:</div>
 <div class="tightly-padded-box">
-<textarea name="address" rows="16" cols="86">
+<textarea name="address" rows="16" cols="86" id="address-textarea">
 </textarea>
 </div>
 <div class="tightly-padded-box">
-Generate random address <input type="checkbox" name="random" onchange="this.parentElement['address'].disabled=this.checked">
+Pick a random page <input type="checkbox" name="random" onchange="document.getElementById('address-textarea').disabled=this.checked" id="generate-random-check">
 </div>
 <div class="tightly-padded-box">
 <input type="submit" value="Query">
 </div>
 </form>
 </div>
-
-<div class="padded-box">
-<b>Note:</b> for the address the allowed characters are: lower and upper case letters, digits and the characters + and -.
 </div>
+
 
 </body>
 </html> 

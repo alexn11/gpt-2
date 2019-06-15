@@ -17,6 +17,7 @@ import subprocess
 
 import cgi
 import cgitb
+#cgitb . enable() #for debugging
 
 
 
@@ -26,7 +27,11 @@ def check_address (address_text):
   return all ((c in address_allowed_char) for c in address_text)
   
 
-#cgitb . enable() #for debugging
+def decode_and_filter_output (model_output):
+  decoded_output = model_output . decode ("utf-8")
+  clean_output = decoded_output . replace ("<|endoftext|>", "<br><p>")
+  # remove html etc....
+  return "<p>" + clean_output
 
 
 def main ():
@@ -47,13 +52,13 @@ def main ():
   print("Content-Type: text/html\r\n\r\n")
   print ("<html><head><title>Sample output</title></head><body>")
   if (is_address_wrong):
-    print ("<h1>Error: address is incorrect</h1>")
-    print ("Check that the address contains only letters, numbers, +, - (no space) <br>")
+    print ("<h1>Error: index is incorrect</h1>")
+    print ("Check that the index contains only letters, numbers, +, - (no space) <br>")
     print ("</body></html>")
     return
 
-  print ("<br> <b>Key :</b> <i>" + key + "</i>")
-  print ("<br> <b>Address :</b> ")
+  print ("<br> <b>Library name :</b> <i>" + key + "</i>")
+  print ("<br> <b>Page index :</b> ")
   if (address_text == "None"):
     print ("(none)")
   else:
@@ -72,13 +77,26 @@ def main ():
 
   print ("<br> <b>Result : </b> <br>")
   print ("<blockquote>")
-  print (model_output . decode ("utf-8"))
+  print (decode_and_filter_output (model_output))
   print ("</blockquote>")
+
+  print ("<a href='/'>Back</a>")
 
   print ("</body></html>")
 
 if (__name__ == "__main__"):
   main ()
+
+
+
+
+
+
+
+
+
+
+
 
 
 
