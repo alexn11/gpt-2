@@ -2,7 +2,7 @@
 
 Access the infinity of pausible texts using GPT2. Query any text (up to some fixed number of tokens) using a unique address.
 
-This fork of GPT2 has been converted into a toy web app. In the [Library of Babel](https://libraryofbabel.info/) one can search in any page that could ever be writen. This system is able to generate these pages using a unique identifier which is an address of a unique page. Most of these pages consists of meaningless sequences of alphabetical characters separated by spaces and periods.
+This fork of GPT2 has been converted into a toy web app. In the [Library of Babel](https://libraryofbabel.info/) one can search in any page that could ever be written. This system is able to generate these pages using a unique identifier which is an address of a unique page. Most of these pages consists of meaningless sequences of alphabetical characters separated by spaces and periods.
 
 On the other hand language models arising from NLP techniques can be used to generate random texts with mostly correct grammar. Such models often decompose texts into tokens which correspond essentially to words rather than letters. This is the case for example for the GPT2 system.
 
@@ -17,6 +17,8 @@ Also a web back end has been incorporated in order to make the address selection
 Another limitation of this application is the fact that the text generated depends strongly on the seed used. In particular this makes it difficult to access any text other than one which is more likely to follow the seed.
 
 # Use
+
+Make sure that you can run the smaple generator from the original GPT2 project.
 
 In the _http_ directory, launch
 ```
