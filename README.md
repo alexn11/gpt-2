@@ -1,6 +1,6 @@
 # Explanations
 
-Access the infinity of pausible texts using GPT2. Query any text (up to some fixed number of tokens) using a unique address.
+Access the infinity of plausible texts using GPT2. Query any text (up to some fixed number of tokens) using a unique address.
 
 This fork of GPT2 has been converted into a toy web app. In the [Library of Babel](https://libraryofbabel.info/) one can search in any page that could ever be written. This system is able to generate these pages using a unique identifier which is an address of a unique page. Most of these pages consists of meaningless sequences of alphabetical characters separated by spaces and periods.
 
