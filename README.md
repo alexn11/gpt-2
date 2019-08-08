@@ -18,7 +18,7 @@ Another limitation of this application is the fact that the text generated depen
 
 # Use
 
-Make sure that you can run the smaple generator from the original GPT2 project.
+Make sure that you can run the sample generator from the original GPT2 project.
 
 In the _http_ directory, launch
 ```
