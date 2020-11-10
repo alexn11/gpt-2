@@ -16,7 +16,7 @@ Also a web back end has been incorporated in order to make the address selection
 
 Another limitation of this application is the fact that the text generated depends strongly on the seed used. In particular this makes it difficult to access any text other than one which is more likely to follow the seed.
 
-For more details, check my [blog post on Medium](https://medium.com/@alexandre.de.zotti/gpt-2-as-a-universal-library-b7a02213339)
+For more details, check my [blog post on Medium](https://medium.com/@alexandre.de.zotti/gpt-2-as-a-universal-library-b7a02213339).
 
 # Use
 
